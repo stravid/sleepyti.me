@@ -4,41 +4,47 @@
 <script src="jquery.js"></script>
 <script>
 $(document).ready(function() {
-	// render the page -- in case you're wondering, 
-	// nothing will work without javascript!
-	$("#tit").html('<font face="Garamond"><h1>&nbsp;&nbsp;<i>sleepyti.me <font color="#33CC33">beta</font></i></h1></font>');
-	var mrend = '';
-	mrend = mrend +
-	'<table><tr width="100%">' +
-	'<td width="20%"></td>' +
-	'<td><font face="Garamond" size=5>I have to wake up at <span class="waketime" style="display:none;"></span>&nbsp;</td>' +
-	'<td>' +
-	'<select id="hour">' +
-	'<option>(hour)</option>';
-	
-	// populate our lists
-	for(var h = 1; h <= 12; h++) {
-		mrend = mrend + '<option>' + h + '</option>';	
-	}
-	
-	mrend = mrend + '</select></td><td><select id="minute"><option>(minute)</option>';
-	
-	for(var m = 0; m <= 55; m += 5) {
-		if(m < 10) {
-			mrend = mrend + '<option value="' + m + '">0' + m + '</option>';
-		}
-		else {
-			mrend = mrend + '<option>' + m + '</option>';
+	function ren() {
+		// render the page -- in case you're wondering, 
+		// nothing will work without javascript!
+		$("#tit").html('<font face="Garamond"><h1>&nbsp;&nbsp;<i>sleepyti.me <font color="#33CC33">beta 2</font></i></h1></font>');
+		var mrend = '';
+		mrend = mrend +
+		'<table><tr width="100%">' +
+		'<td width="20%"></td>' +
+		'<td><span class="intro"><font face="Garamond" size=5>I have to wake up at <span class="waketime" style="display:none;"></span>&nbsp;</td>' +
+		'<td>' +
+		'<select id="hour">' +
+		'<option>(hour)</option>';
+		
+		// populate our lists
+		for(var h = 1; h <= 12; h++) {
+			mrend = mrend + '<option>' + h + '</option>';	
 		}
 		
+		mrend = mrend + '</select></td><td><select id="minute"><option>(minute)</option>';
+		
+		for(var m = 0; m <= 55; m += 5) {
+			if(m < 10) {
+				mrend = mrend + '<option value="' + m + '">0' + m + '</option>';
+			}
+			else {
+				mrend = mrend + '<option>' + m + '</option>';
+			}
+			
+		}
+		
+		mrend = mrend + '</select></td><td><select id="ampm">' + 
+		'<option>AM</option><option>PM</option></select></td></tr>' +
+		'<tr><td><hr color="white"></td></tr>' +
+		'<tr valign=TOP><td></td><td align="center"><span id="nowtop"><hr color="white" width="25%"><big><font color="#666666"><i>or, find out when to wake up<br/>if you go to bed now</i></font></big></td><td align="center"><hr color="white" width="25%"><input type="button" value="zzz" id="sleepnow"/></span></td>' +
+		'<td></td></span>' +
+		'<td></tr><tr><span class="results" style="display:none;"></span></td>' + 
+		'</tr></table>';
+		
+		$('#main').html(mrend);
 	}
-	
-	mrend = mrend + '</select></td><td><select id="ampm">' + 
-	'<option>AM</option><option>PM</option></select></td></tr><td></td>' +
-	'<td><span class="results" style="display:none;"></span></td>' + 
-	'</tr></table>';
-	
-	$('#main').html(mrend);
+	ren();
 	
 	// calculates an hour and a half back
 	function sleepback(hr, min, an) {
@@ -69,11 +75,124 @@ $(document).ready(function() {
 		return r;
 	}
 	
+	// knockout takes a date object and returns a
+	// string with wake times!
+	// time + :14 + (multiples of 90 mins)
+	function knockout(rightnow) {
+		var r = ''; // return string
+		var hr = rightnow.getHours();
+		var dhr = 0; // separate variable to display because (24 hr clock)
+		var ap = '';
+		
+		
+		// it takes 14 minutes to fall asleep
+		var min = rightnow.getMinutes() + 14;
+		if(min > 60) {
+			min = min - 60;
+			hr = hr + 1;
+			
+			if(hr >= 24) {
+				if(hr == 24) {
+					hr = 0; // midnight, must adjust!
+				}
+				else if(hr == 25) {
+					hr = 1;
+				}
+			}
+		}
+		
+		r = '<p>It takes the average human <b>fourteen minutes</b> to fall asleep.</p><p>If you head to bed right now, you should try to wake up at one of the following times:</p><p>&nbsp;&nbsp;<font size=6><font color="#666666">';
+		for(var ctr = 0; ctr < 6; ctr++) { // normal sleep scheedule
+			// add an hour and a half
+			if(min < 30) {
+				min = min + 30;
+			}
+			else {
+				min = min - 30;
+				hr = hr + 1
+			}
+			hr = hr + 1;
+			
+			if(hr == 24) {
+				hr = 0;
+			}
+			if(hr == 25) {
+				hr = 1;
+			}
+			
+			if(hr < 12) {
+				ap = ' AM';
+				dhr = hr;
+				if(hr == 0) {
+					dhr = "12";
+				}
+			}
+			else {
+				ap = ' PM';
+				dhr = hr - 12;	
+			}
+			if(ctr == 0) {
+				if(min > 9) {
+					r = r  + dhr + ':' + min + ap;
+				}
+				else {
+					r = r + dhr + ':0' + min + ap;
+				}
+			}
+			else if(ctr == 4 || ctr == 5) {
+				if(min > 9) {
+					r = r + ' <i>or</i> <font color="#00CC33">' + dhr + ':' + min + ap + '</font>';
+				}
+				else {
+					r = r + ' <i>or</i> <font color="#00CC33">' + dhr + ':0' + min + ap;
+				}
+			}
+			else if(ctr == 3) {
+				if(min > 9) {
+					r = r + ' <i>or</i> <font color="#99CC66">' + dhr + ':' + min + ap + '</font>';
+				}
+				else {
+					r = r + ' <i>or</i> <font color="#99CC66">' + dhr + ':0' + min + ap + '</font>';
+				}	
+			}
+			else {
+				if(min > 9) {
+					r = r + ' <i>or</i> ' + hr + ':' + min + ap;
+				}
+				else {
+					r = r + ' <i>or</i> ' + hr + ':0' + min + ap;
+				}
+			}	
+		}
+		r = r + '</font></font></p><p>A good night\'s sleep consists of 5-6 complete sleep cycles.</p>';
+		r = r + '<a href="index.html">back</a>';
+		return r;
+	}
+
+	
+	// handle "sleep now" requests
+	// this currently fades out the #main id,
+	// and works in a totally separate div
+	$("#sleepnow").click(function() {
+		var st = '';
+		var answ = ''; // this is the text we return
+		var d = new Date();
+		answ = knockout(d); // knockout takes a Date() and returns a string of wake times
+		st = '<span id="bit" style=display:none><font face="Garamond" size=5>' +
+		answ +
+		'</font></span>';
+		$('#main').fadeOut(500);
+		$('#instant').html(st);
+		$('#bit').delay(500).show(500);
+	});
+	
 	// user changes the list, so we calculate times!
 	$("#main select").change(function () {
 		if($("#hour").val() == '(hour)' || $("#minute").val() == '(minute)') {
 			return false;
 		}
+		
+		$('#nowtop').fadeOut(500); // ???
 		var ampm = $("#ampm").val();	
 		var hr = $("#hour").val();
 		var min = $("#minute").val();
@@ -120,13 +239,13 @@ $(document).ready(function() {
 					}
 				}
 				else {
-                                        if(first == true) {
-                                                first = false;
-                                                txt = txt + '<font color="#01DF74" size="7">' + nhr + ':0' + nmin + ' ' + ampmt + '</font>';
-                                        }
-                                        else {
-                                                txt = txt + ' <i>or</i> ' + '<font color="#01DF74" size="7">' + nhr + ':0' + nmin + ' ' + ampmt + '</font>';
-                                        }
+                    if(first == true) {
+						first = false;
+						txt = txt + '<font color="#01DF74" size="7">' + nhr + ':0' + nmin + ' ' + ampmt + '</font>';
+                    }
+                    else {
+						txt = txt + ' <i>or</i> ' + '<font color="#01DF74" size="7">' + nhr + ':0' + nmin + ' ' + ampmt + '</font>';
+                    }
 				}
 			}
 			hr = nhr;
@@ -165,5 +284,6 @@ $(document).ready(function() {
 <body>
 <div id="tit"></div>
 <div id="main"></div>
+<div id="instant">
 </body>
 </html>
