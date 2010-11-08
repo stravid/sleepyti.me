@@ -1,3 +1,10 @@
+
+<!-----------------------------------------------------
+sleepyti.me bedtime calculator
+Author: David Shaw (dshaw dot jobs at gmail dot com)
+URL: http://github.com/davidshaw/sleepyti.me/
+------------------------------------------------------>
+
 <html>
 <head>
 <title>sleepyti.me bedtime calculator</title>
@@ -7,7 +14,7 @@ $(document).ready(function() {
 	function ren() {
 		// render the page -- in case you're wondering, 
 		// nothing will work without javascript!
-		$("#tit").html('<font face="Garamond"><h1>&nbsp;&nbsp;<i>sleepyti.me <font color="#33CC33">beta 2</font></i></h1></font>');
+		$("#tit").html('<font face="Garamond"><h1>&nbsp;&nbsp;<i>sleepyti.me <font color="#33CC33">beta 3</font></i></h1></font>');
 		var mrend = '';
 		mrend = mrend +
 		'<table><tr width="100%">' +
@@ -41,10 +48,14 @@ $(document).ready(function() {
 		'<td></td></span>' +
 		'<td></tr><tr><span class="results" style="display:none;"></span></td>' + 
 		'</tr></table>';
-		
 		$('#main').html(mrend);
 	}
 	ren();
+	
+	function putads() {
+		// let's throw in some ads
+		$('#amazon').fadeIn(2500);
+	}
 	
 	// calculates an hour and a half back
 	function sleepback(hr, min, an) {
@@ -101,8 +112,8 @@ $(document).ready(function() {
 			}
 		}
 		
-		r = '<p>It takes the average human <b>fourteen minutes</b> to fall asleep.</p><p>If you head to bed right now, you should try to wake up at one of the following times:</p><p>&nbsp;&nbsp;<font size=6><font color="#666666">';
-		for(var ctr = 0; ctr < 6; ctr++) { // normal sleep scheedule
+		r = '<p>It takes the average human <b>fourteen minutes</b> to fall asleep.</p><p>If you head to bed right now, you should try to wake up at one of the following times:</p><h2><font color="#666666">';
+		for(var ctr = 0; ctr < 6; ctr++) { // normal sleep schedule
 			// add an hour and a half
 			if(min < 30) {
 				min = min + 30;
@@ -157,15 +168,15 @@ $(document).ready(function() {
 			}
 			else {
 				if(min > 9) {
-					r = r + ' <i>or</i> ' + hr + ':' + min + ap;
+					r = r + ' <i>or</i> ' + dhr + ':' + min + ap;
 				}
 				else {
-					r = r + ' <i>or</i> ' + hr + ':0' + min + ap;
+					r = r + ' <i>or</i> ' + dhr + ':0' + min + ap;
 				}
 			}	
 		}
-		r = r + '</font></font></p><p>A good night\'s sleep consists of 5-6 complete sleep cycles.</p>';
-		r = r + '<a href="index.html">back</a>';
+		r = r + '</h2></font><p>A good night\'s sleep consists of 5-6 complete sleep cycles.</p>';
+		r = r + '<a href="index.html"><h3>back</h3></a>';
 		return r;
 	}
 
@@ -179,11 +190,12 @@ $(document).ready(function() {
 		var d = new Date();
 		answ = knockout(d); // knockout takes a Date() and returns a string of wake times
 		st = '<span id="bit" style=display:none><font face="Garamond" size=5>' +
-		answ +
-		'</font></span>';
-		$('#main').fadeOut(500);
+		answ + '</font></span>';
+		$('#main').hide();
 		$('#instant').html(st);
-		$('#bit').delay(500).show(500);
+		$('#instant').show()
+		$('#bit').show(250);
+		putads()
 	});
 	
 	// user changes the list, so we calculate times!
@@ -207,7 +219,7 @@ $(document).ready(function() {
 			}
 		}
 		
-		var txt = '<font face="Garamond" size=5><br/><br/>You should try to <b>fall asleep</b> at one of the following times:<br/><br/><font size=6>';
+		var txt = '<font face="Garamond" size=5>You should try to <b>fall asleep</b> at one of the following times:<br/><br/><font size=6>';
 		var first = true;
 		
 		for(var c = 1; c <= 10; c++) {
@@ -255,21 +267,11 @@ $(document).ready(function() {
 		
 		txt = txt + '<br/><br/><font color="#0080FF">Please keep in mind that you should be <i>falling asleep</i> at these times.<br/><br/> The average adult human takes <b>fourteen minutes</b> to fall asleep, so plan accordingly!</font>';
 		txt = txt + '<br/></br><font color="#9966CC">sleepyti.me works by counting backwards in <b>sleep cycles</b>. Sleep cycles typically last <b>90 minutes</b>.<br/><br/>Waking up in the middle of a sleep cycle leaves you feeling tired and groggy, but waking up <i>in between</i> cycles lets you wake up feeling refreshed and alert!</font>';
-		txt = txt + '<br/><br/><a href="index.html"><big>back</big></a>';
-		txt = txt + '<br/><br/><br/><span class="donate" style="display:none;"></span>';
-		$('#main').fadeOut(1000);
-		$('#instant').delay(1000).html(txt);
-		$('#instant').delay(1000).fadeIn(1000);
+		txt = txt + '<br/><br/><a href="index.html"><h3>back</h3></a>';
+		$('#main').hide();
+		$('#instant').html(txt)
+		$('#instant').show(500)
 		
-		donate = '<font face="Garamond" size=5 color="#666666"><table><tr height="100%"><td valign="bottom">Are you waking up refreshed because of sleepyti.me? Consider donating to support this free and open source project!<br/><br/>' +
-		'<center>' +
-		'<form action="https://www.paypal.com/cgi-bin/webscr" method="post"><input type="hidden" name="cmd" value="_s-xclick">' +
-		'<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHRwYJKoZIhvcNAQcEoIIHODCCBzQCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYBpCHT8Af6SL2MQnFqUr4y2BGrDArDDX0GSvt5t/Wu+DBiWgQj6u5HludfZn6tdMVFOJ0joDwm6W92y7DK5QQo54fGAEo6LGSL88Q8eNgjksP98M1NXyutWNT9vu0SC0br3k1TQS/S7VczbiW7y5nleo7Qtb8H2fuqe5uPdfhcKuTELMAkGBSsOAwIaBQAwgcQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIm1dWir2jBi+AgaBN/scqXKEUoQ5O19mUesLossK/VHQ4C9RHt8KcMcw8VkNK6BNvdVGYMjm+RHVqHOsPjWoKr6cSlyw8ZHFTxJWayPcHofouciMvYGB80vd1eUjCwE36gJlAhvvSoJQGvcmLsuVMjy2TeiBb8J5to/fqOeC3PEa5FSs4xgvYm0vy9IQhOKdCnyU7JCNTez9cMyqUWXUDlovN80KR4GNU5MWDoIIDhzCCA4MwggLsoAMCAQICAQAwDQYJKoZIhvcNAQEFBQAwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMB4XDTA0MDIxMzEwMTMxNVoXDTM1MDIxMzEwMTMxNVowgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBR07d/ETMS1ycjtkpkvjXZe9k+6CieLuLsPumsJ7QC1odNz3sJiCbs2wC0nLE0uLGaEtXynIgRqIddYCHx88pb5HTXv4SZeuv0Rqq4+axW9PLAAATU8w04qqjaSXgbGLP3NmohqM6bV9kZZwZLR/klDaQGo1u9uDb9lr4Yn+rBQIDAQABo4HuMIHrMB0GA1UdDgQWBBSWn3y7xm8XvVk/UtcKG+wQ1mSUazCBuwYDVR0jBIGzMIGwgBSWn3y7xm8XvVk/UtcKG+wQ1mSUa6GBlKSBkTCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb22CAQAwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQCBXzpWmoBa5e9fo6ujionW1hUhPkOBakTr3YCDjbYfvJEiv/2P+IobhOGJr85+XHhN0v4gUkEDI8r2/rNk1m0GA8HKddvTjyGw/XqXa+LSTlDYkqI8OwR8GEYj4efEtcRpRYBxV8KxAW93YDWzFGvruKnnLbDAF6VR5w/cCMn5hzGCAZowggGWAgEBMIGUMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbQIBADAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTAxMDA0MDMwNTQzWjAjBgkqhkiG9w0BCQQxFgQU1GjaUiJxCQZO4a5l5+VUwbCIfogwDQYJKoZIhvcNAQEBBQAEgYCYtrrshPFV96iF/OhEW5Ir+Ur+Eb1BrBjd1ASfQ4ikl5RHfRJy6UUoKoSwsCW652QzcZKsjrIDy/xYim7ESg2RNbOtNTfVrdDqlgNVKrwClV0oJx/Pt/X17NSbZq/3phsLtj8tixNsHyPTrW0+tJtlzMAxUsIlKXClkKImyEqeLQ==-----END PKCS7-----">' +
-		'<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">' +
-		'<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1"></form>';
-		donate = donate + '<br/><br/><center><font face="Garamond"><h2>&copy; <a href="http://github.com/davidshaw/dshaw_resume/raw/master/dshaw_resume_2010.pdf">David Shaw</a>, 2010</font></h2></center>';
-		$('.donate').html(donate);
-		$('.donate').fadeIn(1000); // necessary?
 		var wtime = "";
 		if(orig[1] > 9) {
 			wtime = '<b>' + orig[0] + ':' + orig[1] + ' ' + orig[2] + '</b>';	
@@ -279,13 +281,28 @@ $(document).ready(function() {
 		}
 		$('.waketime').html(wtime);
 		$('.waketime').fadeIn(1000);
+		putads();
 	});
 });
 </script>
 </head>
-<body>
+<body link="#0080FF" vlink="#0080FF">
 <div id="tit"></div>
 <div id="main"></div>
-<div id="instant"></div>
+<div id="instant" style="display:none;"></div>
+<div id="amazon" style="display:none;" align="center" valign="bottom">
+<hr color="#CCCCCC" width="30%"><font face="Garamond" size=5 color="#666666"><i>These endorsed products have helped me sleep almost as much as sleepyti.me!<br/><br/>
+
+<iframe src="http://rcm.amazon.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=sleepymebedti-20&o=1&p=8&l=as1&m=amazon&f=ifr&asins=B003SS6CY4" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<iframe src="http://rcm.amazon.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=sleepymebedti-20&o=1&p=8&l=as1&m=amazon&f=ifr&asins=B00196LFGW" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+<iframe src="http://rcm.amazon.com/e/cm?t=sleepymebedti-20&o=1&p=8&l=as1&asins=B0009F3QKW&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+<iframe src="http://rcm.amazon.com/e/cm?t=sleepymebedti-20&o=1&p=8&l=as1&asins=0071467432&fc1=000000&IS2=1&lt1=_blank&m=amazon&lc1=0000FF&bc1=000000&bg1=FFFFFF&f=ifr" style="width:120px;height:240px;" scrolling="no" marginwidth="0" marginheight="0" frameborder="0"></iframe>
+
+
+<div>
 </body>
 </html>
